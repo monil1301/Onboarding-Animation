@@ -2,10 +2,15 @@ package com.shah.onboardinganimations.ui.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,8 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
@@ -39,7 +47,8 @@ import coil.request.ImageRequest
 fun OnboardingCard(
     isExpanded: Boolean,
     onCardClick: () -> Unit,
-    title: String,
+    collapsedText: String,
+    expandedText: String,
     imageUrl: String
 ) {
     val cardHeight by animateDpAsState(
@@ -101,13 +110,56 @@ fun OnboardingCard(
                 )
             }
 
-            if (!isExpanded) {
-                Text(
-                    text = title,
+            androidx.compose.animation.AnimatedVisibility(
+                visible = !isExpanded,
+                enter = fadeIn(tween(300)),
+                exit = fadeOut(tween(300)),
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth()
+                    .padding(start = 0.dp, end = 16.dp) // adjust padding if needed
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Spacer(modifier = Modifier.width(48.dp)) // enough to clear the image width + padding
+
+                    Text(
+                        text = collapsedText,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(48.dp)) // mirror left spacer
+                }
+            }
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn(tween(300, delayMillis = 100)),
+                exit = fadeOut(tween(150))
+            ) {
+                Column(
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(start = 48.dp)
-                )
+                        .align(Alignment.TopCenter)
+                        .padding(top = imageOffsetX + imageHeight + 16.dp)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = expandedText,
+                        fontSize = 20.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -116,5 +168,5 @@ fun OnboardingCard(
 @Preview
 @Composable
 fun PreviewOnboardingCard() {
-    OnboardingCard(false, {}, "collapsed", "")
+    OnboardingCard(false, {}, "collapsed", "", "")
 }
