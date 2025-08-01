@@ -75,4 +75,7 @@ dependencies {
     // Moshi
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+
+    // Hilt navigation
+    implementation(libs.hilt.nav.compose)
 }

@@ -13,6 +13,7 @@ daggerHilt = "2.51.1"
 ktor = "2.3.4"
 coil = "2.6.0"
 moshi = "1.15.0"
+androidHilt = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,8 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+
+hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidHilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
