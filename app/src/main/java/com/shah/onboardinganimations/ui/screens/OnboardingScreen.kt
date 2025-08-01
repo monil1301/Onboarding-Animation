@@ -1,5 +1,9 @@
 package com.shah.onboardinganimations.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,15 +12,22 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shah.onboardinganimations.ui.components.OnboardingCardList
 import com.shah.onboardinganimations.ui.components.TopBar
+import com.shah.onboardinganimations.ui.components.WelcomeText
 import com.shah.onboardinganimations.ui.viewmodel.OnboardingViewModel
 import com.shah.onboardinganimations.utils.ResponseResource
+import kotlinx.coroutines.delay
 
 /**
  * Created by Monil on 01/08/25.
@@ -29,7 +40,9 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = hiltViewModel(), onNext: (
     viewModel.fetchOnboarding()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().systemBarsPadding()
+        modifier = Modifier
+            .fillMaxSize()
+            .systemBarsPadding()
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -49,6 +62,8 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = hiltViewModel(), onNext: (
                         onboardingDetails.saveButtonCta,
                         onboardingDetails.toolBarIcon,
                         onboardingDetails.toolBarText,
+                        onboardingDetails.introTitle,
+                        onboardingDetails.introSubtitle,
                         onNext
                     )
                 }

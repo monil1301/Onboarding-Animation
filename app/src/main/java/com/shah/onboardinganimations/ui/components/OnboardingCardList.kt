@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,8 @@ fun OnboardingCardList(
     saveButtonCta: SaveButtonCta,
     toolBarIcon: String,
     toolBarText: String,
+    introTitle: String,
+    introSubtitle: String,
     onNext: () -> Unit
 ) {
     var expandedIndex by remember { mutableIntStateOf(-1) }
@@ -51,7 +54,7 @@ fun OnboardingCardList(
     var isAnimating by remember { mutableStateOf(true) }
 
     // Configurable animation timings
-    val delayBeforeStart = 500L
+    val delayBeforeStart = 2500L
 
     // Launch the entrance animation
     LaunchedEffect(Unit) {
@@ -75,6 +78,8 @@ fun OnboardingCardList(
 
     val activeTheme = cards.getOrNull(expandedIndex.takeIf { it >= 0 } ?: 0)
 
+    var introTextVisible by remember { mutableStateOf(true) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,9 +92,26 @@ fun OnboardingCardList(
                 )
             )
     ) {
+        LaunchedEffect(Unit) {
+            while (introTextVisible) {
+                delay(2000)
+                introTextVisible = !introTextVisible
+            }
+        }
+
+        AnimatedVisibility(
+            visible = introTextVisible,
+            enter = fadeIn(animationSpec = tween(500)),
+            exit = fadeOut(animationSpec = tween(500)),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            WelcomeText(introTitle, introSubtitle)
+        }
+
         Scaffold(
             topBar = {
-                TopBar(toolBarIcon, toolBarText) {}
+                if (!introTextVisible)
+                    TopBar(toolBarIcon, toolBarText) {}
             },
             containerColor = Color.Transparent
         ) {
