@@ -1,12 +1,14 @@
 package com.shah.onboardinganimations.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ManualBuyEducationData(
     val actionText: String,
     val bottomToCenterTranslationInterval: Int,
     val cohort: String,
     val collapseCardTiltInterval: Int,
     val collapseExpandIntroInterval: Int,
-    val combination: Any,
     val ctaLottie: String,
     val educationCardList: List<OnboardingCard>,
     val expandCardStayInterval: Int,
@@ -15,7 +17,6 @@ data class ManualBuyEducationData(
     val introTitle: String,
     val saveButtonCta: SaveButtonCta,
     val screenType: String,
-    val seenCount: Any,
     val shouldShowBeforeNavigating: Boolean,
     val shouldShowOnLandingPage: Boolean,
     val toolBarIcon: String,

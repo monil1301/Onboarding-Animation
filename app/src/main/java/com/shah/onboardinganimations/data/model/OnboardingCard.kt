@@ -1,5 +1,8 @@
 package com.shah.onboardinganimations.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OnboardingCard(
     val backGroundColor: String,
     val collapsedStateText: String,

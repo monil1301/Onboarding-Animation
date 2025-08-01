@@ -14,6 +14,7 @@ ktor = "2.3.4"
 coil = "2.6.0"
 moshi = "1.15.0"
 androidHilt = "1.2.0"
+serialization = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,7 +42,6 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 
-
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
@@ -49,10 +49,13 @@ moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.re
 
 hilt-nav-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidHilt" }
 
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serializable = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kapt = { id = "kotlin-kapt"}
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt"}
 

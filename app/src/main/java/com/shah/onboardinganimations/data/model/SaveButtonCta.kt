@@ -1,10 +1,10 @@
 package com.shah.onboardinganimations.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SaveButtonCta(
     val backgroundColor: String,
-    val deeplink: Any,
-    val icon: Any,
-    val order: Any,
     val strokeColor: String,
     val text: String,
     val textColor: String

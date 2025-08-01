@@ -12,13 +12,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.shah.onboardinganimations.data.model.OnboardingCard
 
 /**
  * Created by Monil on 01/08/25.
  */
 
 @Composable
-fun OnboardingCardList() {
+fun OnboardingCardList(cards: List<OnboardingCard>) {
     var expandedIndex by remember { mutableIntStateOf(-1) } // -1 means none expanded
 
     val imageUrls = listOf(
