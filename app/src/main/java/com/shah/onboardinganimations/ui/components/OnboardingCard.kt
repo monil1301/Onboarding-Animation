@@ -16,10 +16,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -117,13 +121,13 @@ fun OnboardingCard(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .fillMaxWidth()
-                    .padding(start = 0.dp, end = 16.dp) // adjust padding if needed
+                    .padding(horizontal = 16.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Spacer(modifier = Modifier.width(48.dp)) // enough to clear the image width + padding
+                    Spacer(modifier = Modifier.width(48.dp)) // leave space for image
 
                     Text(
                         text = collapsedText,
@@ -133,10 +137,14 @@ fun OnboardingCard(
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(end = 16.dp)
+                            .padding(end = 8.dp)
                     )
 
-                    Spacer(modifier = Modifier.width(48.dp)) // mirror left spacer
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Expand",
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
             }
 
