@@ -161,6 +161,7 @@ fun OnboardingCard(
                             lineHeight = 20.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
+                            color = Color.White,
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 8.dp)
@@ -191,7 +192,8 @@ fun OnboardingCard(
                             lineHeight = 28.sp,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            color = Color.White
                         )
                     }
                 }

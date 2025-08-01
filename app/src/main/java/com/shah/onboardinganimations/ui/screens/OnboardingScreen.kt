@@ -34,8 +34,14 @@ fun OnboardingScreen(viewModel: OnboardingViewModel = hiltViewModel()) {
         ) {
             when (state.value) {
                 is ResponseResource.Success -> {
-                    val cards = (state.value as ResponseResource.Success).data.onboardingData.manualBuyEducationData.educationCardList
-                    OnboardingCardList(cards)
+                    val onboardingDetails = (state.value as ResponseResource.Success).data.onboardingData.manualBuyEducationData
+                    val cards = onboardingDetails.educationCardList
+                    OnboardingCardList(
+                        cards,
+                        onboardingDetails.expandCardStayInterval,
+                        onboardingDetails.bottomToCenterTranslationInterval,
+                        onboardingDetails.collapseExpandIntroInterval,
+                    )
                 }
 
                 is ResponseResource.Failure -> {
