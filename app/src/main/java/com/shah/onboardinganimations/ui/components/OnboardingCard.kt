@@ -60,16 +60,6 @@ fun OnboardingCard(
         animationSpec = tween(durationMillis = 500)
     )
 
-    val imageHeight by animateDpAsState(
-        targetValue = if (isExpanded) 340.dp else 36.dp,
-        animationSpec = tween(durationMillis = 500)
-    )
-
-    val imageWidth by animateDpAsState(
-        targetValue = if (isExpanded) 340.dp else 32.dp,
-        animationSpec = tween(durationMillis = 500)
-    )
-
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -90,14 +80,19 @@ fun OnboardingCard(
             val density = LocalDensity.current
             val containerWidth = with(density) { constraints.maxWidth.toDp() }
 
-            val imageOffsetX by animateDpAsState(
-                targetValue = if (isExpanded) (containerWidth - imageWidth) / 2 else 16.dp,
-                animationSpec = tween(durationMillis = 500)
-            )
+            val targetImageWidth = if (isExpanded) containerWidth - 32.dp else 32.dp
+            val targetImageHeight = if (isExpanded) 340.dp else 36.dp
+            val targetOffsetX = if (isExpanded) (containerWidth - targetImageWidth) / 2 else 16.dp
+            val targetOffsetY = if (isExpanded) 16.dp else (cardHeight - targetImageHeight) / 2
+
+            val imageWidth by animateDpAsState(targetValue = targetImageWidth, animationSpec = tween(500))
+            val imageHeight by animateDpAsState(targetValue = targetImageHeight, animationSpec = tween(500))
+            val imageOffsetX by animateDpAsState(targetValue = targetOffsetX, animationSpec = tween(500))
+            val imageOffsetY by animateDpAsState(targetValue = targetOffsetY, animationSpec = tween(500))
 
             Box(
                 modifier = Modifier
-                    .offset(x = imageOffsetX)
+                    .offset(x = imageOffsetX, y = imageOffsetY)
                     .width(imageWidth)
                     .height(imageHeight)
                     .clip(RoundedCornerShape(16.dp))
@@ -109,8 +104,7 @@ fun OnboardingCard(
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
