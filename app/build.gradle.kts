@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.kotlin.serializable)
     alias(libs.plugins.kapt)
 }
 
@@ -80,4 +81,7 @@ dependencies {
 
     // Hilt navigation
     implementation(libs.hilt.nav.compose)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

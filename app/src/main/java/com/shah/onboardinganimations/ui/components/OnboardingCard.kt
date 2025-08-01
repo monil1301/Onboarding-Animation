@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -39,8 +42,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.shah.onboardinganimations.data.model.OnboardingCard
 
 /**
  * Created by Monil on 01/08/25.
@@ -50,125 +55,148 @@ import coil.request.ImageRequest
 @Composable
 fun OnboardingCard(
     isExpanded: Boolean,
+    onboardingCard: OnboardingCard,
+    backgroundColor: Color,
+    strokeColors: List<Color>,
     onCardClick: () -> Unit,
-    collapsedText: String,
-    expandedText: String,
-    imageUrl: String
 ) {
     val cardHeight by animateDpAsState(
         targetValue = if (isExpanded) 444.dp else 68.dp,
         animationSpec = tween(durationMillis = 500)
     )
 
+    val strokeBrush = Brush.verticalGradient(
+        colors = strokeColors
+    )
+
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-            .height(cardHeight)
+            .background(
+                brush = strokeBrush,
+                shape = RoundedCornerShape(28.dp)
+            )
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
             ) {
                 onCardClick()
-            },
-        shape = RoundedCornerShape(28.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val density = LocalDensity.current
-            val containerWidth = with(density) { constraints.maxWidth.toDp() }
-
-            val targetImageWidth = if (isExpanded) containerWidth - 32.dp else 32.dp
-            val targetImageHeight = if (isExpanded) 340.dp else 36.dp
-            val targetOffsetX = if (isExpanded) (containerWidth - targetImageWidth) / 2 else 16.dp
-            val targetOffsetY = if (isExpanded) 16.dp else (cardHeight - targetImageHeight) / 2
-
-            val imageWidth by animateDpAsState(targetValue = targetImageWidth, animationSpec = tween(500))
-            val imageHeight by animateDpAsState(targetValue = targetImageHeight, animationSpec = tween(500))
-            val imageOffsetX by animateDpAsState(targetValue = targetOffsetX, animationSpec = tween(500))
-            val imageOffsetY by animateDpAsState(targetValue = targetOffsetY, animationSpec = tween(500))
-
-            Box(
-                modifier = Modifier
-                    .offset(x = imageOffsetX, y = imageOffsetY)
-                    .width(imageWidth)
-                    .height(imageHeight)
-                    .clip(RoundedCornerShape(16.dp))
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
             }
-
-            androidx.compose.animation.AnimatedVisibility(
-                visible = !isExpanded,
-                enter = fadeIn(tween(300)),
-                exit = fadeOut(tween(300)),
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+            .padding(1.dp),
+        shape = RoundedCornerShape(28.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(cardHeight)
+                .background(backgroundColor, RoundedCornerShape(28.dp))
+        ) {
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
+                val density = LocalDensity.current
+                val containerWidth = with(density) { constraints.maxWidth.toDp() }
+
+                val targetImageWidth = if (isExpanded) containerWidth - 32.dp else 32.dp
+                val targetImageHeight = if (isExpanded) 340.dp else 36.dp
+                val targetOffsetX =
+                    if (isExpanded) (containerWidth - targetImageWidth) / 2 else 16.dp
+                val targetOffsetY =
+                    if (isExpanded) 16.dp else (cardHeight - targetImageHeight) / 2
+
+                val imageWidth by animateDpAsState(
+                    targetValue = targetImageWidth,
+                    animationSpec = tween(500)
+                )
+                val imageHeight by animateDpAsState(
+                    targetValue = targetImageHeight,
+                    animationSpec = tween(500)
+                )
+                val imageOffsetX by animateDpAsState(
+                    targetValue = targetOffsetX,
+                    animationSpec = tween(500)
+                )
+                val imageOffsetY by animateDpAsState(
+                    targetValue = targetOffsetY,
+                    animationSpec = tween(500)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .offset(x = imageOffsetX, y = imageOffsetY)
+                        .width(imageWidth)
+                        .height(imageHeight)
+                        .clip(RoundedCornerShape(16.dp))
                 ) {
-                    Spacer(modifier = Modifier.width(48.dp)) // leave space for image
-
-                    Text(
-                        text = collapsedText,
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp)
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = "Expand",
-                        modifier = Modifier.size(24.dp)
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(onboardingCard.image)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
-            }
 
-            androidx.compose.animation.AnimatedVisibility(
-                visible = isExpanded,
-                enter = fadeIn(tween(300, delayMillis = 100)),
-                exit = fadeOut(tween(150))
-            ) {
-                Column(
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = !isExpanded,
+                    enter = fadeIn(tween(300)),
+                    exit = fadeOut(tween(300)),
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = imageOffsetX + imageHeight + 16.dp)
+                        .align(Alignment.CenterStart)
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 ) {
-                    Text(
-                        text = expandedText,
-                        fontSize = 20.sp,
-                        lineHeight = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Spacer(modifier = Modifier.width(48.dp)) // leave space for image
+
+                        Text(
+                            text = onboardingCard.collapsedStateText,
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp)
+                        )
+
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Expand",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = isExpanded,
+                    enter = fadeIn(tween(300, delayMillis = 100)),
+                    exit = fadeOut(tween(150))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = imageOffsetX + imageHeight + 16.dp)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = onboardingCard.expandStateText,
+                            fontSize = 20.sp,
+                            lineHeight = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun PreviewOnboardingCard() {
-    OnboardingCard(false, {}, "collapsed", "", "")
-}
