@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,12 +21,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shah.onboardinganimations.data.model.OnboardingCard
 import androidx.core.graphics.toColorInt
+import com.shah.onboardinganimations.data.model.OnboardingCard
+import com.shah.onboardinganimations.data.model.SaveButtonCta
 import kotlinx.coroutines.delay
 
 /**
@@ -37,6 +41,10 @@ fun OnboardingCardList(
     expandCardStayInterval: Int,
     bottomToCenterTranslationInterval: Int,
     collapseExpandIntroInterval: Int,
+    saveButtonCta: SaveButtonCta,
+    toolBarIcon: String,
+    toolBarText: String,
+    onNext: () -> Unit
 ) {
     var expandedIndex by remember { mutableIntStateOf(-1) }
     var visibleCardCount by remember { mutableIntStateOf(0) }
@@ -79,39 +87,51 @@ fun OnboardingCardList(
                 )
             )
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(vertical = 8.dp)
+        Scaffold(
+            topBar = {
+                TopBar(toolBarIcon, toolBarText) {}
+            },
+            containerColor = Color.Transparent
         ) {
-            items(cards.size) { index ->
-                AnimatedVisibility(
-                    visible = index < visibleCardCount,
-                    enter = slideInVertically(
-                        initialOffsetY = { fullHeight -> fullHeight }, // slide from bottom
-                        animationSpec = tween(durationMillis = bottomToCenterTranslationInterval)
-                    ) + fadeIn(),
-                    exit = ExitTransition.None
-                ) {
-                    OnboardingCard(
-                        isExpanded = index == expandedIndex,
-                        onCardClick = {
-                            if (!isAnimating) {
-                                expandedIndex = if (expandedIndex == index) -1 else index
-                            }
-                        },
-                        backgroundColor = Color(
-                            (activeTheme?.backGroundColor ?: "#000000").toColorInt()
-                        ).copy(0.3f),
-                        strokeColors = listOf(
-                            Color((activeTheme?.strokeStartColor ?: "#000000").toColorInt()),
-                            Color((activeTheme?.strokeEndColor ?: "#ffffff").toColorInt())
-                        ),
-                        onboardingCard = cards[index]
-                    )
-                }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(cards.size) { index ->
+                    AnimatedVisibility(
+                        visible = index < visibleCardCount,
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight -> fullHeight }, // slide from bottom
+                            animationSpec = tween(durationMillis = bottomToCenterTranslationInterval)
+                        ) + fadeIn(),
+                        exit = ExitTransition.None
+                    ) {
+                        OnboardingCard(
+                            isExpanded = index == expandedIndex,
+                            onCardClick = {
+                                if (!isAnimating) {
+                                    expandedIndex = if (expandedIndex == index) -1 else index
+                                }
+                            },
+                            backgroundColor = Color(
+                                (activeTheme?.backGroundColor ?: "#000000").toColorInt()
+                            ).copy(0.3f),
+                            strokeColors = listOf(
+                                Color((activeTheme?.strokeStartColor ?: "#000000").toColorInt()),
+                                Color((activeTheme?.strokeEndColor ?: "#ffffff").toColorInt())
+                            ),
+                            onboardingCard = cards[index]
+                        )
+                    }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
+
+        if (!isAnimating)
+            SaveGoldButton(Modifier.align(Alignment.BottomCenter), saveButtonCta, onNext)
     }
 }
